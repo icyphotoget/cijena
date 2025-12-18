@@ -1,0 +1,46 @@
+[
+  {
+    "id": "1",
+    "brand": "Dior",
+    "name": "Sauvage",
+    "gender": "male",
+    "season": ["ljeto", "proljeće"],
+    "occasion": ["casual", "izlazak"],
+    "notes": ["citrus", "ambra", "začinsko"],
+    "intensity": "srednje",
+    "longevity": 7
+  },
+  {
+    "id": "2",
+    "brand": "Yves Saint Laurent",
+    "name": "Y EDP",
+    "gender": "male",
+    "season": ["jesen", "zima"],
+    "occasion": ["posao", "dejt"],
+    "notes": ["jabuka", "ginger", "ambra"],
+    "intensity": "srednje",
+    "longevity": 8
+  },
+  {
+    "id": "3",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Baccarat Rouge 540",
+    "gender": "unisex",
+    "season": ["jesen", "zima"],
+    "occasion": ["dejt", "izlazak", "svadba"],
+    "notes": ["ambra", "drvo", "slatko"],
+    "intensity": "jako",
+    "longevity": 10
+  },
+  {
+    "id": "4",
+    "brand": "Chanel",
+    "name": "Bleu de Chanel",
+    "gender": "male",
+    "season": ["proljeće", "ljeto", "jesen"],
+    "occasion": ["posao", "casual", "dejt"],
+    "notes": ["citrus", "drvo", "začinsko"],
+    "intensity": "srednje",
+    "longevity": 7
+  }
+]

@@ -3,11 +3,12 @@ import HomeScreen from '../screens/HomeScreen';
 import QuestionnaireScreen from '../screens/QuestionnaireScreen';
 import ResultsScreen from '../screens/ResultsScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import type { QuestionnaireAnswers } from '../screens/QuestionnaireScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Questionnaire: undefined;
-  Results: undefined;
+  Results: { answers: QuestionnaireAnswers };
   Favorites: undefined;
 };
 
