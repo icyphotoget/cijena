@@ -16,10 +16,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} />
-      <Stack.Screen name="Results" component={ResultsScreen} />
-      <Stack.Screen name="Favorites" component={FavoritesScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'ParfemAI' }} />
+      <Stack.Screen name="Questionnaire" component={QuestionnaireScreen} options={{ title: 'Upitnik' }} />
+      <Stack.Screen name="Results" component={ResultsScreen} options={{ title: 'Preporuke' }} />
+      <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ title: 'Favoriti' }} />
     </Stack.Navigator>
   );
 }

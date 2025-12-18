@@ -1,4 +1,4 @@
-import { View, Text, Button } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
 
@@ -6,20 +6,25 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>
-        Preporuka parfema
+    <View style={{ flex: 1, padding: 24, justifyContent: 'center' }}>
+      <Text style={{ fontSize: 28, fontWeight: '700', marginBottom: 8 }}>ParfemAI</Text>
+      <Text style={{ fontSize: 16, opacity: 0.7, marginBottom: 24 }}>
+        Reci priliku i preference — dobit ćeš preporuke parfema.
       </Text>
 
-      <Button
-        title="Preporuči parfem"
+      <Pressable
         onPress={() => navigation.navigate('Questionnaire')}
-      />
+        style={{ backgroundColor: '#111', padding: 14, borderRadius: 12, marginBottom: 12 }}
+      >
+        <Text style={{ color: 'white', fontSize: 16, textAlign: 'center' }}>Preporuči parfem</Text>
+      </Pressable>
 
-      <Button
-        title="Favoriti"
+      <Pressable
         onPress={() => navigation.navigate('Favorites')}
-      />
+        style={{ borderColor: '#111', borderWidth: 1, padding: 14, borderRadius: 12 }}
+      >
+        <Text style={{ color: '#111', fontSize: 16, textAlign: 'center' }}>Favoriti</Text>
+      </Pressable>
     </View>
   );
 }

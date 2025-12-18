@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 
-export default function Screen() {
+export default function QuestionnaireScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Coming soon</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Upitnik (sljedeće dodajemo)</Text>
     </View>
   );
 }
