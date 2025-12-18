@@ -53,3 +53,6 @@ export async function toggleFavorite(item: FavoriteItem): Promise<boolean> {
   await writeAll([item, ...items]);
   return true;
 }
+export async function clearFavorites(): Promise<void> {
+  await AsyncStorage.removeItem(KEY);
+}

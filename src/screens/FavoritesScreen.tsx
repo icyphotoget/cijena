@@ -1,7 +1,15 @@
 import { useCallback, useState } from 'react';
-import { View, Text, FlatList, Pressable, Alert } from 'react-native';
+import { View, Text, FlatList, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { listFavorites, removeFavorite, FavoriteItem } from '../services/favorites';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import { theme } from '../theme';
+import {
+  listFavorites,
+  removeFavorite,
+  type FavoriteItem,
+  clearFavorites,
+} from '../services/favorites';
 
 export default function FavoritesScreen() {
   const [items, setItems] = useState<FavoriteItem[]>([]);
@@ -17,6 +25,7 @@ export default function FavoritesScreen() {
         setLoading(false);
       }
     })();
+
     return () => {
       cancelled = true;
     };
@@ -26,65 +35,98 @@ export default function FavoritesScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, padding: 16, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Učitavam…</Text>
+      <View
+        style={{
+          flex: 1,
+          padding: theme.spacing.l,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: theme.colors.bg,
+        }}
+      >
+        <Text style={{ color: theme.colors.muted }}>Učitavam…</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, padding: theme.spacing.l, backgroundColor: theme.colors.bg }}>
+      <View style={{ marginBottom: theme.spacing.m }}>
+        <Text style={{ fontSize: theme.type.h2, fontWeight: '800', color: theme.colors.text }}>
+          Favoriti
+        </Text>
+        <Text style={{ color: theme.colors.muted, marginTop: 6 }}>
+          Spremljeni parfemi su lokalno na uređaju.
+        </Text>
+      </View>
+
+      {items.length > 0 && (
+        <View style={{ marginBottom: theme.spacing.m }}>
+          <Button
+            title="Obriši sve"
+            variant="outline"
+            onPress={() => {
+              Alert.alert(
+                'Obrisati sve favorite?',
+                'Ova radnja se ne može vratiti.',
+                [
+                  { text: 'Odustani', style: 'cancel' },
+                  {
+                    text: 'Obriši',
+                    style: 'destructive',
+                    onPress: async () => {
+                      await clearFavorites();
+                      setItems([]);
+                    },
+                  },
+                ]
+              );
+            }}
+          />
+        </View>
+      )}
+
       {items.length === 0 ? (
-        <Text style={{ opacity: 0.7 }}>Nema favorita još. Spremi nešto iz rezultata.</Text>
+        <Card>
+          <Text style={{ color: theme.colors.muted }}>
+            Nema favorita još. Spremi nešto iz rezultata.
+          </Text>
+        </Card>
       ) : (
         <FlatList
           data={items}
           keyExtractor={(x) => x.id}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          ItemSeparatorComponent={() => <View style={{ height: theme.spacing.m }} />}
           renderItem={({ item }) => (
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: '#ddd',
-                borderRadius: 14,
-                padding: 14,
-              }}
-            >
-              <Text style={{ fontSize: 16, fontWeight: '600' }}>
+            <Card style={{ marginBottom: 0 }}>
+              <Text style={{ fontSize: 16, fontWeight: '800', color: theme.colors.text }}>
                 {item.brand} – {item.name}
               </Text>
 
-              <Pressable
-                onPress={() => {
-                  Alert.alert(
-                    'Ukloni iz favorita?',
-                    `${item.brand} – ${item.name}`,
-                    [
-                      { text: 'Odustani', style: 'cancel' },
-                      {
-                        text: 'Ukloni',
-                        style: 'destructive',
-                        onPress: async () => {
-                          await removeFavorite(item.id);
-                          setItems(prev => prev.filter(x => x.id !== item.id));
+              <View style={{ marginTop: theme.spacing.m }}>
+                <Button
+                  title="Ukloni"
+                  variant="outline"
+                  onPress={() => {
+                    Alert.alert(
+                      'Ukloni iz favorita?',
+                      `${item.brand} – ${item.name}`,
+                      [
+                        { text: 'Odustani', style: 'cancel' },
+                        {
+                          text: 'Ukloni',
+                          style: 'destructive',
+                          onPress: async () => {
+                            await removeFavorite(item.id);
+                            setItems((prev) => prev.filter((x) => x.id !== item.id));
+                          },
                         },
-                      },
-                    ]
-                  );
-                }}
-                style={{
-                  marginTop: 10,
-                  alignSelf: 'flex-start',
-                  borderWidth: 1,
-                  borderColor: '#111',
-                  paddingVertical: 8,
-                  paddingHorizontal: 10,
-                  borderRadius: 12,
-                }}
-              >
-                <Text style={{ fontWeight: '600' }}>Ukloni</Text>
-              </Pressable>
-            </View>
+                      ]
+                    );
+                  }}
+                />
+              </View>
+            </Card>
           )}
         />
       )}
