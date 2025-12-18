@@ -1,10 +1,11 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, FlatList, Dimensions, StatusBar } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import { theme } from '../theme';
 import Button from '../components/Button';
-import { VIBES, getPerfumesForVibe, type VibeId, type Perfume } from '../services/vibes';
+import { VIBES, getPerfumesForVibe, type VibeId } from '../services/vibes';
+import type { Perfume } from '../services/perfumesRepo';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VibeCarousel'>;
 
@@ -28,19 +29,19 @@ function VibePerfumePage({ perfume, index, total }: { perfume: Perfume; index: n
         </Text>
 
         <Text style={{ color: theme.colors.muted, marginTop: 14, fontSize: 16 }}>
-          Jačina: {perfume.intensity} · Trajnost: {perfume.longevity}/10
+          Jačina: {perfume.intensity ?? '—'} · Trajnost: {(perfume.longevity ?? '—')}/10
         </Text>
 
         <Text style={{ color: theme.colors.muted, marginTop: 10, fontSize: 16 }}>
-          Note: {Array.isArray(perfume.notes) && perfume.notes.length ? perfume.notes.join(', ') : '—'}
+          Note: {perfume.notes?.length ? perfume.notes.join(', ') : '—'}
         </Text>
 
         <Text style={{ color: theme.colors.muted, marginTop: 10, fontSize: 16 }}>
-          Prilike: {Array.isArray(perfume.occasion) && perfume.occasion.length ? perfume.occasion.join(', ') : '—'}
+          Prilike: {perfume.occasion?.length ? perfume.occasion.join(', ') : '—'}
         </Text>
 
         <Text style={{ color: theme.colors.muted, marginTop: 10, fontSize: 16 }}>
-          Sezone: {Array.isArray(perfume.season) && perfume.season.length ? perfume.season.join(', ') : '—'}
+          Sezone: {perfume.season?.length ? perfume.season.join(', ') : '—'}
         </Text>
       </View>
 
@@ -53,10 +54,30 @@ function VibePerfumePage({ perfume, index, total }: { perfume: Perfume; index: n
 
 export default function VibeCarouselScreen({ route, navigation }: Props) {
   const { vibeId } = route.params;
-  const vibe = useMemo(() => VIBES.find(v => v.id === vibeId), [vibeId]);
-  const items = useMemo(() => getPerfumesForVibe(vibeId as VibeId), [vibeId]);
+
+  const vibe = useMemo(() => VIBES.find((v) => v.id === vibeId), [vibeId]);
+
+  const [items, setItems] = useState<Perfume[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const listRef = useRef<FlatList<Perfume>>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      setLoading(true);
+      const out = await getPerfumesForVibe(vibeId as VibeId);
+      if (!cancelled) {
+        setItems(out);
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [vibeId]);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.bg }}>
@@ -69,7 +90,11 @@ export default function VibeCarouselScreen({ route, navigation }: Props) {
         </Text>
       </View>
 
-      {items.length === 0 ? (
+      {loading ? (
+        <View style={{ flex: 1, padding: theme.spacing.l, justifyContent: 'center' }}>
+          <Text style={{ color: theme.colors.muted }}>Učitavam…</Text>
+        </View>
+      ) : items.length === 0 ? (
         <View style={{ flex: 1, padding: theme.spacing.l, justifyContent: 'center' }}>
           <Text style={{ color: theme.colors.muted, marginBottom: theme.spacing.m }}>
             Nema parfema u ovom vibeu (trenutno).
@@ -87,11 +112,7 @@ export default function VibeCarouselScreen({ route, navigation }: Props) {
           renderItem={({ item, index }) => (
             <VibePerfumePage perfume={item} index={index} total={items.length} />
           )}
-          getItemLayout={(_, index) => ({
-            length: W,
-            offset: W * index,
-            index,
-          })}
+          getItemLayout={(_, index) => ({ length: W, offset: W * index, index })}
         />
       )}
     </View>

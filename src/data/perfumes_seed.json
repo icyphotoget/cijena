@@ -1,0 +1,15 @@
+[
+  {
+    "id": "dior-sauvage-edt",
+    "brand": "Dior",
+    "name": "Sauvage",
+    "concentration": "EDT",
+    "gender": "male",
+    "year": 2015,
+    "notes": ["bergamot","ambra","pepper"],
+    "season": ["ljeto","proljeće"],
+    "occasion": ["casual","izlazak"],
+    "intensity": "srednje",
+    "longevity": 7
+  }
+]
